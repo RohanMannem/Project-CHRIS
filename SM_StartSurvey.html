@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style type="text/css">
+    #video_player_box {
+      width: 1000px;
+      height: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+
+    #replayButton {
+      opacity: 1;
+    }
+    #replayButtonPos {
+      padding: 10px;
+      position: absolute;
+      top: 350px;
+      left: 15px;
+    }
+    #textStyle1 {
+      margin-left: 1000px;
+      font-size: 20px;
+      position: absolute;
+      top: 100px;
+      opacity: 1;
+
+    }
+    #textStyle2 {
+      margin-left: 1000px;
+      font-size: 20px;
+      position: absolute;
+      top: 150px;
+    }
+  </style>
+
+  <script>
+    /*
+      Function to toggle Play/Pause Images
+    */
+    
+    function playPause(btn, video) {
+      var video = document.getElementById(video);
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+    
+  </script>
+
+</head>
+
+<body id = main_body background = "images/CHRIS_1_bg.jpg">
+  <p>
+    <label id = "textStyle1" for = "name"> 1 of 28 &nbsp:&nbsp </label>
+  </p>
+  <p>
+    <label id = "textStyle2" for = "name"> 0% Completed </label>
+  </p>
+  <div id = "video_player_box">
+
+    <video id = "myVideo" poster = "images/Icon_TouchToContinue.jpg" src = "media/video/Chris_1_Web.mp4" width = "1000" height = "500"
+      autoplay>
+      <source src="media/video/Chris_1_Web.mp4" type="video/mp4">
+    </video>
+
+    <script type='text/javascript'>
+      //Following is for poster image to function
+      var video = document.getElementById("myVideo");
+      video.addEventListener("click", function (event) {
+        if (video.paused == true) {
+          video.play();
+        }
+        else {
+          video.pause();
+        }
+      });
+
+      //Get current question number
+      function getQuestionNumber(currentVideo) {
+        var x = currentVideo.substr(74, 1);
+        if (Number(currentVideo.substr(74, 2)) > 9) {
+          x = currentVideo.substr(74, 2);
+        }
+        return x;
+      }
+
+      //Get video percent complete
+      function getPercentComplete(questionNum) {
+        //approximate value calculated with 336 questions multiplied by 12 sec average per video
+        var percent = Math.round(questionNum * 336 / 100);
+        return percent;
+      }
+      //When video play ends, display replay button and continue button and go to next video 
+      function getNextQuestionVideo(currentVideo) {
+        var y = Number(getQuestionNumber(currentVideo)) + 1;
+        var nextVideo = "media/video/Chris_" + y + "_Web.mp4";
+        return nextVideo;
+      }
+      document.getElementById('myVideo').addEventListener('ended', myHandler, false);
+
+      function myHandler(e) {
+        if (!e) { e = window.event; }
+        document.getElementById("playPauseImage").src = "images/Icon_Replay.jpg";;
+        //Following is to clear the previous video answers 
+        var myCanvas = document.getElementById('myCanvas');
+        const context = myCanvas.getContext('2d');
+      }
+    </script>
+
+    <div id = "replayButtonPos">
+      <button id = "replayButton" onclick = "playPause(this, 'myVideo')">
+        <img id = "playPauseImage" src="images/Icon_PlayAgain.jpg" height="50px" width="100px" />
+      </button>
+    </div>
+
+  </div>
+  <canvas id="myCanvas" width="1250" height="400"></canvas>
+  <script>
+    var myVideo = document.getElementById("myVideo");
+    myVideo.ontimeupdate = function () {
+      // Remove the decimal numbers from the time
+      var currentTime = Math.floor(myVideo.currentTime);
+      var duration = Math.floor(myVideo.duration);
+      var questionNumber = getQuestionNumber(document.getElementById("myVideo").src);
+      //alert(currentTime + ' - ' + duration);
+      if (currentTime == Math.round(duration / 5)) {
+        getAnswerImage(questionNumber + 'a', 40);
+      }
+      else if (currentTime == Math.round(duration * 2 / 5)) {
+        getAnswerImage(questionNumber + 'b', 250);
+      }
+      else if (currentTime == Math.round(duration * 3 / 5)) {
+        getAnswerImage(questionNumber + 'c', 460);
+      }
+      else if (currentTime == Math.round(duration * 4 / 5)) {
+        getAnswerImage(questionNumber + 'd', 670);
+      }
+      else if (currentTime - 1 == duration - 1) {
+        getAnswerImage(questionNumber + 'e', 880);
+      }
+      function getAnswerImage(imageNumber, offset) {
+        var canvas1 = document.getElementById('myCanvas');
+        var context = canvas1.getContext('2d');
+        var imageObj1 = new Image();
+        imageObj1.src = 'images/Icon_' + imageNumber + '.jpg';
+        imageObj1.onload = function () {
+          context.drawImage(imageObj1, offset, 20, 200, 200);
+        };
+      }
+    }
+    //Canvas onClick tracking
+    var canvas = document.getElementById('myCanvas');
+    canvas.addEventListener('click', function () { }, false);
+    var e = document.getElementById('myCanvas'),
+      elemLeft = e.offsetLeft,
+      elemTop = e.offsetTop,
+      context = e.getContext('2d'),
+      elements = [];
+
+    // event listener for click event
+    e.addEventListener('click', function (event) {
+      var xVal = event.pageX - elemLeft,
+        yVal = event.pageY - elemTop;
+      //console.log(xVal, yVal);
+      elements.forEach(function (ele) {
+        if (yVal > ele.top && yVal < ele.top + ele.height && xVal > ele.left && xVal < ele.left + ele.width) {
+
+          //TODO - If question 22 there is another video to be played
+
+          //alert('element clicked' + xVal + ' - ' + yVal);
+          document.getElementById("playPauseImage").src = "images/Icon_Replay.jpg";;
+          var currVideo = document.getElementById("myVideo").src;
+          document.getElementById("myVideo").src = getNextQuestionVideo(currVideo);
+
+          //Following is to clear the previous video answers 
+          var myCanvas = document.getElementById('myCanvas');
+          const context = myCanvas.getContext('2d');
+          context.clearRect(0, 0, myCanvas.width, myCanvas.height);
+
+          //Set the background image
+          var nextQuestionNum = Number(getQuestionNumber(currVideo)) + 1;
+
+          if (nextQuestionNum > 28) {
+            document.body.style.backgroundImage = "url('images/CHRIS_endGif.gif')";
+            //Hide button and video
+            document.getElementById('myVideo').style.visibility = 'hidden';
+            document.getElementById('playPauseImage').style.visibility = 'hidden';
+          } else {
+            var bgImageName = 'url(' + '\'images/CHRIS_' + nextQuestionNum + '_bg.jpg\')';
+            document.body.style.backgroundImage = bgImageName;
+            //Set question number
+            document.getElementById("questionLabel").innerText = nextQuestionNum;
+            //Set percent complete
+            var percentComplete = getPercentComplete(nextQuestionNum - 1);
+            document.getElementById("percentCompleteLabel").innerText = percentComplete;
+          }
+
+        }
+      });
+    }, false);
+    elements.push({
+      colour: '#1C2128',
+      width: 1250,
+      height: 200,
+      top: 30,
+      left: 20
+    });
+    elements.forEach(function (ele) {
+      context.fillStyle = element.colour;
+      context.fillRect(ele.left, ele.top, ele.width, ele.height);
+    });
+  </script>
+</body>
+
+</html>

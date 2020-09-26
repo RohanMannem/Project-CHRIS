@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style type="text/css">
+    #video_player_box {
+      width: 1100px;
+      height: 600px;
+      background: #B7CEEC;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+
+    #skipbutton {
+      padding: 10px;
+      opacity: 1;
+    }
+    #skipbuttonPos {
+      padding: 10px;
+      position: absolute;
+      top: 450px;
+      right: 15px;
+    }
+  </style>
+</head>
+
+<body style="background-color: #CBE2FF" align="center">
+  <div id="video_player_box" class="center">
+    <video id="myVideo" poster="images/Icon_TouchToPlay.jpg" width="1100" height="600" class="center" autoplay>
+      <source src="media/Chris_00_INTRO_web.mp4" type="video/mp4">
+    </video>
+    <script type='text/javascript'>
+      /* When video play ends, display replay button and continue button */
+      document.getElementById('myVideo').addEventListener('ended', myHandler, false);
+      function myHandler(e) {
+        if (!e) { e = window.event; }
+        document.getElementById("skipButtonImage").src = "images/Icon_Begin.jpg";;
+      }
+      //Following is for poster image to function
+      var video = document.getElementById("myVideo");
+      video.addEventListener("click", function (event) {
+        if (video.paused == true) {
+          video.play();
+        }
+        else {
+          video.pause();
+        }
+      });
+    </script>
+    <div id = "skipbuttonPos">
+        <button id = "skipbutton" >
+            <a href="SM_StartSurvey.html">
+              <img id="skipButtonImage" src="images/Icon_Skip.jpg" height="50px" width="100px"/>
+            </a>
+          </button>
+    </div>
+
+  </div>
+
+</body>
+
+</html>

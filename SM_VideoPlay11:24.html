@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style type="text/css">
+    div#video_player_box {
+      width: 1100px;
+      height: 600px;
+      background: #B7CEEC;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    div#video_controls_bar {
+      background: #000;
+      padding: 0px;
+    }
+
+    div#skipbutton {
+      background: #B7CEEC;
+      padding: 1000px;
+      width: 12343px;
+    }
+  </style>
+
+  <script>
+    /*
+      Function to toggle Play/Pause Images
+    */
+    /*
+    function playPause(btn, video) {
+      var video = document.getElementById(video);
+      if (video.paused) {
+        video.play();
+        document.getElementById("playPauseImage").src = "images/Icon_TouchToContinue.jpg";
+      } else {
+        video.pause();
+        document.getElementById("playPauseImage").src = "images/Icon_TouchToPlay.jpg";;
+      }
+    }*/
+
+
+  </script>
+
+</head>
+
+<body style="background-color: #CBE2FF" align = "center"> 
+  <table align = "center">
+    <tr>
+      <td>
+        <div id="video_player_box" class = "center">
+          <video id="myVideo" poster="images/Icon_TouchToPlay.jpg" width="1100" height="600" class = "center" autoplay>
+            <source src="media/Chris_00_INTRO_web.mp4" type="video/mp4">
+          </video>
+          <script type='text/javascript'>
+            /* When video play ends, display replay button and continue button */
+            document.getElementById('myVideo').addEventListener('ended', myHandler, false);
+            function myHandler(e) {
+              if (!e) { e = window.event; }
+              //document.getElementById("playPauseImage").src = "images/Icon_Replay.jpg";;
+              document.getElementById("skipButtonImage").src = "images/Icon_Begin.jpg";;
+            }
+            //Following is for poster image to function
+            var video = document.getElementById("myVideo");
+            video.addEventListener("click", function (event) {
+              if (video.paused == true) {
+                video.play();
+              }
+              else {
+                video.pause();
+              }
+            });
+          </script>
+
+          <button id="skipbutton" top = "80%" left = "70%" >
+            <a href="SM_StartSurvey.html">
+      <img id="skipButtonImage" src="images/Icon_Skip.jpg" height="100px" width="200px" />
+    </a>
+  </button>
+
+        </div>
+      </td>
+      <td>
+        <table>
+          <tr>
+            <td>
+              <button id="skipbutton">
+                <a href="SM_StartSurvey.html">
+                  <img id="skipButtonImage" src="images/Icon_Skip.jpg" height="100px" width="200px" />
+                </a>
+              </button>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+
+</html>
